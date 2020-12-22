@@ -58,7 +58,8 @@ public class ShatterAPI {
             keyStore.load(null, null);
             keyStore.setCertificateEntry("server", certificate);
 
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory
+                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStore);
 
             SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -77,7 +78,8 @@ public class ShatterAPI {
                 .build();
     }
 
-    public ShatterPlayer requestPlayer(ShatterPlayerRequest shatterPlayerRequest) throws IOException, InterruptedException {
+    public ShatterPlayer requestPlayer(ShatterPlayerRequest shatterPlayerRequest)
+            throws IOException, InterruptedException {
         Optional<ShatterPlayer> shatterPlayer = shatterPlayerCache.getIfPresent(shatterPlayerRequest);
         if (shatterPlayer != null) return shatterPlayer.get();
 
