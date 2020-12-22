@@ -22,8 +22,8 @@ import java.nio.file.Path;
 import java.rmi.UnexpectedException;
 import java.security.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class ShatterAPI {
@@ -36,7 +36,7 @@ public class ShatterAPI {
 
     private final HttpClient httpClient;
 
-    private final Cache<String, ShatterPlayer> shatterPlayerCache;
+    private final Cache<ShatterPlayerRequest, Optional<ShatterPlayer>> shatterPlayerCache;
 
     public ShatterAPI(Toml config, Path pluginFolder, Logger logger) {
         this.config = config;
@@ -78,6 +78,9 @@ public class ShatterAPI {
     }
 
     public ShatterPlayer requestPlayer(ShatterPlayerRequest shatterPlayerRequest) throws IOException, InterruptedException {
+        Optional<ShatterPlayer> shatterPlayer = shatterPlayerCache.getIfPresent(shatterPlayerRequest);
+        if (shatterPlayer != null) return shatterPlayer.get();
+
         String serializedRequest = mapper.writeValueAsString(shatterPlayerRequest);
 
         HttpRequest request = HttpRequest.newBuilder(URI.create(API_BASE_URL)
@@ -91,11 +94,14 @@ public class ShatterAPI {
         int status = response.statusCode();
 
         if (status == HttpURLConnection.HTTP_NO_CONTENT) {
-            return null;
+            shatterPlayer = Optional.empty();
         } else if (status == HttpURLConnection.HTTP_OK) {
-            return mapper.readValue(response.body(), ShatterPlayer.class);
+            shatterPlayer = Optional.of(mapper.readValue(response.body(), ShatterPlayer.class));
         } else {
             throw new UnexpectedException("Invalid status code " + status);
         }
+
+        shatterPlayerCache.put(shatterPlayerRequest, shatterPlayer);
+        return shatterPlayer.get();
     }
 }
