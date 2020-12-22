@@ -36,7 +36,7 @@ public class ShatterAPI {
 
     private final HttpClient httpClient;
 
-    private final Cache<ShatterPlayerRequest, Optional<ShatterPlayer>> shatterPlayerCache;
+    private final Cache<ShatterPlayerRequest, Wrapper<ShatterPlayer>> shatterPlayerCache;
 
     public ShatterAPI(Toml config, Path pluginFolder, Logger logger) {
         this.config = config;
@@ -80,7 +80,7 @@ public class ShatterAPI {
 
     public ShatterPlayer requestPlayer(ShatterPlayerRequest shatterPlayerRequest)
             throws IOException, InterruptedException {
-        Optional<ShatterPlayer> shatterPlayer = shatterPlayerCache.getIfPresent(shatterPlayerRequest);
+        Wrapper<ShatterPlayer> shatterPlayer = shatterPlayerCache.getIfPresent(shatterPlayerRequest);
         if (shatterPlayer != null) return shatterPlayer.get();
 
         String serializedRequest = mapper.writeValueAsString(shatterPlayerRequest);
@@ -96,9 +96,9 @@ public class ShatterAPI {
         int status = response.statusCode();
 
         if (status == HttpURLConnection.HTTP_NO_CONTENT) {
-            shatterPlayer = Optional.empty();
+            shatterPlayer = new Wrapper();
         } else if (status == HttpURLConnection.HTTP_OK) {
-            shatterPlayer = Optional.of(mapper.readValue(response.body(), ShatterPlayer.class));
+            shatterPlayer = new Wrapper(mapper.readValue(response.body(), ShatterPlayer.class));
         } else {
             throw new UnexpectedException("Invalid status code " + status);
         }
