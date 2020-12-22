@@ -20,7 +20,7 @@ Shatter implements an alternative host-key-based authentication method for clien
 ### Why?
 There are many use cases for Shatter, of which two notable ones are mentioned here:
 
-1. **Tournaments**: In local tournaments, organisers can restrict access to the network beyond the Minecraft server for participants without the issues associated with offline mode servers, such as account impersonation or having to use password authentication on plugin. Players who can authenticate with Mojang (for example, spectators) are completely unaffected by Shatter.
+1. **Tournaments**: In local tournaments, organisers can restrict access to the network beyond the Minecraft server for participants without the issues associated with offline mode servers, such as account impersonation or having to use password authentication plugins. Players who can authenticate with Mojang (for example, spectators) are completely unaffected by Shatter.
 
 2. **Server Administration**: For server owners and admins, Shatter allows the creation of unlimited alternative accounts for testing and moderation (for example, only having admin powers on a separate account), without disrupting gameplay on their main accounts.
 
