@@ -1,0 +1,13 @@
+[Shatter]
+cache_expiry=60
+
+[ShatterAPI]
+cache_size=500
+cache_expiry=60
+cert_file="server.crt"
+api_base_url="https://localhost:25570"
+
+[MojangAPI]
+cache_size=500
+cache_expiry=60
+api_has_uuid="https://api.mojang.com/users/profiles/minecraft/"
