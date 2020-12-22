@@ -77,18 +77,10 @@ public class Shatter {
         } catch(Exception e) {
             logger.error("An error occurred while accessing the Shatter API.", e);
 
-            event.setResult(PreLoginEvent.PreLoginComponentResult
-                    .denied(Component.text("Shatter: Could not access Shatter API.")));
-
             return;
         }
 
-        if (player == null) {
-            event.setResult(PreLoginEvent.PreLoginComponentResult
-                    .denied(Component.text("Shatter: User not found or host key is invalid.")));
-
-            return;
-        }
+        if (player == null) return;
 
         try {
             if (mojangAPI.hasUUID(player.getName())) {
